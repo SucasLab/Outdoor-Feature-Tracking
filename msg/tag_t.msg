@@ -1,0 +1,10 @@
+float64 x
+float64 y
+float64 X_e
+float64 Y_e
+float64 x_interpolated
+float64 y_interpolated
+float64 X_e_interpolated
+float64 Y_e_interpolated
+float64 angle
+float64 rad
