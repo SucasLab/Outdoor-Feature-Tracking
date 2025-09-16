@@ -51,23 +51,23 @@ def objectTracking(rawVideo, draw_bb=False, play_realtime=False, save_to_file=Fa
     # input label data in World Frame
     label_0_X = float (input("X Coordinate of label_0 in World Frame:"))
     label_0_Y = float (input("Y Coordinate of label_0 in World Frame:"))
-    label_dis = float(input("Distance of label_0 and label_1 in X Coordinate of World Frame:"))
+    label_dis = float(input("Distance between label_0 and label_1 on the X-axis in World Frame (m):"))
 
 
     # draw rectangle roi for target objects, or use default objects initilization
     if draw_bb:
-        n_object = int(input("Number of label to track:"))
+        n_object = int(input("Number of Labels:"))
         bboxs[0] = np.empty((n_object,4,2), dtype=float)
         label_data = np.zeros((n_frame,n_object,2))
         target_data = np.zeros((n_frame,1,2))
 
         # 标注时请按照      0:left-top   1:right-top    2:right-bottom   3:left-bottom  便于后续视场角角度偏转纠正及相对位置计算
         for i in range(n_object):
-            cv2.namedWindow("Select Object %d"%(i), cv2.WINDOW_NORMAL)
-            cv2.resizeWindow("Select Object %d"%(i), 1152, 648)
-            cv2.moveWindow("Select Object %d"%(i), 0, 0)
-            (xmin, ymin, boxw, boxh) = cv2.selectROI("Select Object %d"%(i),frames[0])
-            cv2.destroyWindow("Select Object %d"%(i))
+            cv2.namedWindow("Select Labels %d"%(i), cv2.WINDOW_NORMAL)
+            cv2.resizeWindow("Select Labels %d"%(i), 1152, 648)
+            cv2.moveWindow("Select Labels %d"%(i), 0, 0)
+            (xmin, ymin, boxw, boxh) = cv2.selectROI("Select Labels %d"%(i),frames[0])
+            cv2.destroyWindow("Select Labels %d"%(i))
             label_data[0, i, :] = np.array([xmin+boxw/2,ymin+boxh/2]).reshape(1,2)
             bboxs[0][i,:,:] = np.array([[xmin,ymin],[xmin+boxw,ymin],[xmin,ymin+boxh],[xmin+boxw,ymin+boxh]]).astype(float)
         
@@ -118,7 +118,7 @@ def objectTracking(rawVideo, draw_bb=False, play_realtime=False, save_to_file=Fa
             print('Generate New Features')
             startXs,startYs = getFeatures(cv2.cvtColor(frames[i],cv2.COLOR_RGB2GRAY),bboxs[i],use_shi=False)
 
-         #track the moving target
+        # track the moving target
         _item = gTracker.track(frames[i])
         coord = _item.getMessage()['coord']
         # print(coord, coord[0],coord[0][0])
@@ -153,7 +153,7 @@ def objectTracking(rawVideo, draw_bb=False, play_realtime=False, save_to_file=Fa
         gray = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
         tags = at_detector.detect(gray)
         for tag in tags:
-            #获取Apriltag角点及中心坐标
+            # 获取Apriltag角点及中心坐标
             tag.corners[0][0] += roi_x
             tag.corners[1][0] += roi_x
             tag.corners[2][0] += roi_x
@@ -168,13 +168,13 @@ def objectTracking(rawVideo, draw_bb=False, play_realtime=False, save_to_file=Fa
             d = tuple(tag.corners[3])   # left-bottom
             cx = (tag.center[0] + roi_x)
             cy = (tag.center[1] + roi_y)
-            #print(cx,cy)
-            #绘制Apriltag4个角点
+            # print(cx,cy)
+            # 绘制Apriltag4个角点
             frames_draw[i] = cv2.circle(frames_draw[i], tuple(tag.corners[0].astype(int)), 4, (255, 0, 0), 2)
             frames_draw[i] = cv2.circle(frames_draw[i], tuple(tag.corners[1].astype(int)), 4, (255, 0, 0), 2)
             frames_draw[i] = cv2.circle(frames_draw[i], tuple(tag.corners[2].astype(int)), 4, (255, 0, 0), 2)
             frames_draw[i] = cv2.circle(frames_draw[i], tuple(tag.corners[3].astype(int)), 4, (255, 0, 0), 2)
-            #绘制Apriltag中心坐标
+            # 绘制Apriltag中心坐标
             (cX, cY) = (int(cx), int(cy))
             frames_draw[i] = cv2.circle(frames_draw[i], (cX, cY), 5, (255, 0, 255), -1)
 
@@ -250,7 +250,7 @@ def objectTracking(rawVideo, draw_bb=False, play_realtime=False, save_to_file=Fa
 
 
 if __name__ == "__main__":
-    cap = cv2.VideoCapture("/home/junwei/catkin_ws/src/feature_tracking/experiment/real_world/0919_111.mp4")
+    cap = cv2.VideoCapture("path/to/your/video.mp4")
     at_detector = apriltag.Detector(apriltag.DetectorOptions(families='tag36h11'))
     objectTracking(cap,draw_bb=True,play_realtime=True,save_to_file=True)
     cap.release()
