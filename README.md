@@ -32,4 +32,5 @@ We provide a sample test video and a processed output video for reference. You c
 
 This order is necessary for subsequent field-of-view angle correction and relative position calculation.
 
+------
 #### The target's pose information is published via ROS topics by default. You can subscribe to or record these topics for further use.
