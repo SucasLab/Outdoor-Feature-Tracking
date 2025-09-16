@@ -1,7 +1,7 @@
 # Outdoor-Feature-Tracking
 This is the outdoor feature tracking module in paper "Model Predictive Control with Residual Learning and Real-time Disturbance Rejection: Design and Experimentation"
 
-We provide a sample test video and a processed output video for reference. You can also replace it with your own video for testing.
+We provide a sample test output, and you can conduct tests based on your own video files.
 
 ## 🚀 Quick Start
 
